@@ -307,6 +307,42 @@ void sortingNamaObat(json obat)
     }
 }
 
+void menuKasir(json &obat, json &transaksi)
+{
+    int pilihan;
+
+    do
+    {
+
+        cout << "\n=========== MENU KASIR ===========\n";
+        cout << "1. View Data Obat\n";
+        cout << "2. Cari Obat\n";
+        cout << "3. Transaksi\n";
+        cout << "4. Riwayat Transaksi\n";
+        cout << "5. Kembali";
+        cout << "Pilih : ";
+        cin >> pilihan;
+
+        if (pilihan == 1)
+        {
+            tampilkanObat(obat);
+        }
+        else if (pilihan == 2)
+        {
+            searchObat(obat);
+        }
+        else if (pilihan == 3)
+        {
+            transaksiData(obat, transaksi);
+        }
+        else if (pilihan == 4)
+        {
+            riwayatTransaksi(transaksi);
+        }
+
+    } while (pilihan != 5);
+}
+
 void menuAdmin(json &obat, json &transaksi)
 {
     int pilihan;
