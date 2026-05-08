@@ -9,18 +9,20 @@
 using namespace std;
 using json = nlohmann::json;
 
-json LoadJSON(string filename)
+json loadJSON(string filename)
 {
-    ifstream i(filename);
-    json j;
-    i >> j;
-    return j;
+    ifstream file(filename);
+    if (!file.is_open())
+        return json::object();
+    json data;
+    file >> data;
+    return data;
 }
 
-void SaveJSON(string filename, json j)
+void saveJSON(string filename, json data)
 {
-    ofstream o(filename);
-    o << j.dump(4) << endl;
+    ofstream file(filename);
+    file << data.dump(4) << endl;
 }
 
 void setColor(int color)
@@ -63,6 +65,8 @@ void registerUser(json &users)
     u["role"] = "kasir";
 
     users["users"].push_back(u);
+
+    saveJSON("users.json", users);
 
     cout << "Registrasi berhasil!\n";
 }
