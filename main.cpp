@@ -86,6 +86,54 @@ string loginUser(json users)
     return "gagal";
 }
 
+void tampilkanObat(json obat)
+{
+    setColor(11);
+
+    cout << "\n";
+    cout << "╔════════════════════════════════════════════════════════════════════════════╗\n";
+    cout << "║                         DATA OBAT APOTEK                                   ║\n";
+    cout << "╠════╦══════╦════════════════╦════════════╦══════════╦══════════╦═══════════ ╣\n";
+
+    setColor(14);
+
+    cout << "║ No ║ ID   ║ Nama Obat      ║ Jenis      ║ Harga    ║ Stok     ║ Expired    ║\n";
+
+    setColor(11);
+
+    cout << "╠════╬══════╬════════════════╬════════════╬══════════╬══════════╬═══════════ ╣\n";
+
+    int no = 1;
+
+    for (auto &o : obat["obat"])
+    {
+        setColor(7);
+
+        cout << "║ "
+             << left << setw(3) << no++
+             << "║ "
+             << setw(5) << o["id"].get<string>()
+             << "║ "
+             << setw(15) << o["nama"].get<string>()
+             << "║ "
+             << setw(11) << o["jenis"].get<string>()
+             << "║ "
+             << setw(9) << o["harga"].get<int>()
+             << "║ "
+             << setw(9) << o["stok"].get<int>()
+             << "║ "
+             << setw(10)
+             << (o.contains("expired") ? o["expired"].get<string>() : "-")
+             << "║\n";
+    }
+
+    setColor(11);
+
+    cout << "╚════╩══════╩════════════════╩════════════╩══════════╩══════════╩═══════════ ╝\n";
+
+    setColor(7);
+}
+
 int main()
 {
     cout << "Hello, World!" << endl;
