@@ -252,6 +252,84 @@ void hapusObat(json &obat)
 
 int main()
 {
-    cout << "Hello, World!" << endl;
+    SetConsoleOutputCP(CP_UTF8);
+    json users = loadJSON("users.json");
+    json obat = loadJSON("obat.json");
+    json transaksi = loadJSON("transaksi.json");
+    ofstream tes("TES_LOKASI.txt");
+    tes << "PROGRAM DI SINI";
+    tes.close();
+
+    if (!users.contains("users"))
+    {
+        users["users"] = json::array();
+    }
+
+    if (!obat.contains("obat"))
+    {
+        obat["obat"] = json::array();
+    }
+
+    if (!transaksi.contains("transaksi"))
+    {
+        transaksi["transaksi"] = json::array();
+    }
+
+    int pilihan;
+
+    do
+    {
+        cout << "\n========== SISTEM PENGELOAAN DATA OBAT APOTEK ==========\n";
+        cout << "1. Register\n";
+        cout << "2. Login\n";
+        cout << "3. Keluar\n";
+        cout << "Masukkan pilihan : ";
+        cin >> pilihan;
+
+        if (pilihan == 1)
+        {
+            registerUser(users);
+        }
+
+        else if (pilihan == 2)
+        {
+            int kesempatanLogin = 3;
+            bool berhasil = false;
+
+            while (kesempatanLogin > 0)
+            {
+                string role = loginUser(users);
+
+                if (role == "admin")
+                {
+                    cout << "Anda Login Sebagai Admin!\n";
+                    menuAdmin(obat, transaksi);
+
+                    berhasil = true;
+                    break;
+                }
+                else if (role == "kasir")
+                {
+                    cout << "Anda Login Sebagai Kasir!\n";
+                    menuKasir(obat, transaksi);
+
+                    berhasil = true;
+                    break;
+                }
+                else
+                {
+                    kesempatanLogin--;
+                    cout << "\nUsername atau Password Anda Salah!\n";
+                }
+            }
+            if (!berhasil)
+            {
+                cout << "Kesempatan login habis! Program Berhenti....\n";
+                return 0;
+            }
+        }
+
+    } while (pilihan != 3);
+
     return 0;
 }
