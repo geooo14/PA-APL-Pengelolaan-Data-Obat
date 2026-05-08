@@ -307,6 +307,46 @@ void sortingNamaObat(json obat)
     }
 }
 
+void menuAdmin(json &obat, json &transaksi)
+{
+    int pilihan;
+
+    do
+    {
+        cout << "\n=========== MENU ADMIN ===========\n";
+        cout << "1. Tambah Data Obat\n";
+        cout << "2. Lihat Data Obat\n";
+        cout << "3. Update Obat\n";
+        cout << "4. Hapus Obat\n";
+        cout << "5. Riwayat Transaksi\n";
+        cout << "6. Logout\n";
+        cout << "Masukkan Pilihan : ";
+        cin >> pilihan;
+
+        if (pilihan == 1)
+        {
+            tambahObat(obat);
+        }
+        else if (pilihan == 2)
+        {
+            viewMenu(obat);
+        }
+        else if (pilihan == 3)
+        {
+            updateObat(obat);
+        }
+        else if (pilihan == 4)
+        {
+            hapusObat(obat);
+        }
+        else if (pilihan == 5)
+        {
+            riwayatTransaksi(transaksi);
+        }
+
+    } while (pilihan != 6);
+}
+
 void transaksiData(json &obat, json &transaksi)
 {
     string id;
