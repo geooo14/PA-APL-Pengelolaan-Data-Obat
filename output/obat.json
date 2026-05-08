@@ -1,0 +1,12 @@
+{
+    "obat": [
+        {
+            "expired": "12-12-2029",
+            "harga": 100000,
+            "id": "OB1",
+            "jenis": "Tablet",
+            "nama": "paracetamol",
+            "stok": 100
+        }
+    ]
+}
