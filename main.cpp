@@ -134,6 +134,118 @@ void tampilkanObat(json obat)
     setColor(7);
 }
 
+void tambahObat(json &obat)
+{
+    json o;
+
+    string nama, jenis, expired;
+    int harga, stok;
+
+    int nomor = obat["obat"].size() + 1;
+    o["id"] = "OB" + to_string(nomor);
+
+    cout << "====== TAMBAH DATA OBAT ======\n";
+
+    cout << "Masukkan Nama Obat : ";
+    cin >> nama;
+
+    cout << "Masukkan Jenis Obat : ";
+    cin >> jenis;
+
+    cout << "Masukkan Tanggal Kedaluwarsa : ";
+    cin >> expired;
+
+    cout << "Masukkan Harga Obat : ";
+    cin >> harga;
+
+    cout << "Masukkan Stok Obat : ";
+    cin >> stok;
+
+    o["nama"] = nama;
+    o["jenis"] = jenis;
+    o["expired"] = expired;
+    o["harga"] = harga;
+    o["stok"] = stok;
+
+    obat["obat"].push_back(o);
+
+    saveJSON("obat.json", obat);
+
+    cout << "Data obat berhasil ditambahkan!\n";
+}
+
+void updateObat(json &obat)
+{
+    tampilkanObat(obat);
+
+    int nomor;
+
+    cout << "\nMasukkan Nomor Obat yang ingin diupdate : ";
+    cin >> nomor;
+
+    if (nomor < 1 || nomor > obat["obat"].size())
+    {
+        setColor(12);
+        cout << "Nomor tidak valid!\n";
+        setColor(7);
+        return;
+    }
+
+    string nama, jenis, expired;
+    int harga, stok;
+
+    cout << "\n===== UPDATE DATA OBAT =====\n";
+
+    cout << "Masukkan Nama Obat Baru : ";
+    cin >> nama;
+
+    cout << "Masukkan Jenis Obat Baru : ";
+    cin >> jenis;
+
+    cout << "Masukkan Harga Obat Baru : ";
+    cin >> harga;
+
+    cout << "Masukkan Stok Obat Baru : ";
+    cin >> stok;
+
+    cout << "Masukkan Tanggal Expired Baru : ";
+    cin >> expired;
+
+    obat["obat"][nomor - 1]["nama"] = nama;
+    obat["obat"][nomor - 1]["jenis"] = jenis;
+    obat["obat"][nomor - 1]["harga"] = harga;
+    obat["obat"][nomor - 1]["stok"] = stok;
+    obat["obat"][nomor - 1]["expired"] = expired;
+
+    saveJSON("obat.json", obat);
+
+    cout << "\nData obat berhasil diupdate!\n";
+}
+
+void hapusObat(json &obat)
+{
+    tampilkanObat(obat);
+
+    int nomor;
+
+    cout << "\nMasukkan Nomor Obat yang ingin dihapus : ";
+    cin >> nomor;
+
+    if (nomor < 1 || nomor > obat["obat"].size())
+    {
+        cout << "Nomor tidak valid!\n";
+        return;
+    }
+
+    string nama = obat["obat"][nomor - 1]["nama"];
+
+    obat["obat"].erase(obat["obat"].begin() + (nomor - 1));
+
+    saveJSON("obat.json", obat);
+
+    cout << "Data obat " << nama << " berhasil dihapus!\n";
+}
+
 int main()
 {
     cout << "Hello, World!" << endl;
