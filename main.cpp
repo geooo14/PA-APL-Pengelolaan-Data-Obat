@@ -34,41 +34,47 @@ void setColor(int color)
 
 void registerUser(json &users)
 {
-    string username, password;
-    setColor(9);
-    cout << "\n===== REGISTER =====\n";
-    setColor(7);
-
-    setColor(3);
-    cout << "Enter username: ";
-    setColor(7);
-    cin >> username;
-
-    for (auto &u : users["users"])
+    try
     {
-        if (u["username"] == username)
+        string username, password;
+        setColor(9);
+        cout << "\n===== REGISTER =====\n";
+        setColor(7);
+
+        setColor(3);
+        cout << "Enter username: ";
+        setColor(7);
+        cin >> username;
+
+        for (auto &u : users["users"])
         {
-            cout << "Username telah digunakan!\n";
-            return;
+            if (u["username"] == username)
+            {
+                throw runtime_error("Username Telah diGunakan!");
+                return;
+            }
         }
+
+        cout << "Enter password: ";
+        cin >> password;
+
+        json u;
+
+        u["username"] = username;
+        u["password"] = password;
+
+        u["role"] = "kasir";
+
+        users["users"].push_back(u);
+
+        saveJSON("users.json", users);
+
+        cout << "Registrasi berhasil!\n";
     }
-
-    cout << "Enter password: ";
-    cin >> password;
-
-    json u;
-
-    u["username"] = username;
-    u["password"] = password;
-
-    // default role register = kasir
-    u["role"] = "kasir";
-
-    users["users"].push_back(u);
-
-    saveJSON("users.json", users);
-
-    cout << "Registrasi berhasil!\n";
+    catch (exception &e)
+    {
+        cout << "Gagal Register! : " << e.what() << endl;
+    }
 }
 
 string loginUser(json users)
@@ -140,44 +146,66 @@ void tampilkanObat(json obat)
 
 void tambahObat(json &obat)
 {
-    json o;
+    try
+    {
+        json o;
+        string nama, jenis, expired;
+        int harga, stok;
 
-    string nama, jenis, expired;
-    int harga, stok;
+        int nomor = obat["obat"].size() + 1;
+        o["id"] = "OB" + to_string(nomor);
 
-    int nomor = obat["obat"].size() + 1;
-    o["id"] = "OB" + to_string(nomor);
+        cout << "\n===== TAMBAH OBAT =====\n";
 
-    cout << "====== TAMBAH DATA OBAT ======\n";
+        cout << "Nama Obat: ";
+        cin >> nama;
+        if (nama.empty())
+            throw runtime_error("Nama tidak boleh kosong!");
 
-    cout << "Masukkan Nama Obat : ";
-    cin >> nama;
+        cout << "Jenis Obat: ";
+        cin >> jenis;
+        if (jenis.empty())
+            throw runtime_error("Jenis tidak boleh kosong!");
 
-    cout << "Masukkan Jenis Obat : ";
-    cin >> jenis;
+        cout << "Expired (YYYY-MM-DD): ";
+        cin >> expired;
+        if (expired.empty())
+            throw runtime_error("Tanggal expired tidak boleh kosong!");
 
-    cout << "Masukkan Tanggal Kedaluwarsa : ";
-    cin >> expired;
+        cout << "Harga: ";
+        if (!(cin >> harga))
+            throw runtime_error("Harga harus angka!");
 
-    cout << "Masukkan Harga Obat : ";
-    cin >> harga;
+        if (harga <= 0)
+            throw runtime_error("Harga harus lebih dari 0!");
 
-    cout << "Masukkan Stok Obat : ";
-    cin >> stok;
+        cout << "Stok: ";
+        if (!(cin >> stok))
+            throw runtime_error("Stok harus angka!");
 
-    o["nama"] = nama;
-    o["jenis"] = jenis;
-    o["expired"] = expired;
-    o["harga"] = harga;
-    o["stok"] = stok;
+        if (stok < 0)
+            throw runtime_error("Stok tidak boleh negatif!");
 
-    obat["obat"].push_back(o);
+        o["nama"] = nama;
+        o["jenis"] = jenis;
+        o["expired"] = expired;
+        o["harga"] = harga;
+        o["stok"] = stok;
 
-    saveJSON("obat.json", obat);
+        obat["obat"].push_back(o);
 
-    cout << "Data obat berhasil ditambahkan!\n";
+        saveJSON("obat.json", obat);
+
+        cout << "Obat berhasil ditambahkan!\n";
+    }
+    catch (exception &e)
+    {
+        cin.clear();
+        cin.ignore(1000, '\n');
+
+        cout << "❌ Gagal tambah obat: " << e.what() << endl;
+    }
 }
-
 void updateObat(json &obat)
 {
     tampilkanObat(obat);
@@ -307,119 +335,6 @@ void sortingNamaObat(json obat)
     }
 }
 
-void menuKasir(json &obat, json &transaksi)
-{
-    int pilihan;
-
-    do
-    {
-
-        cout << "\n=========== MENU KASIR ===========\n";
-        cout << "1. View Data Obat\n";
-        cout << "2. Cari Obat\n";
-        cout << "3. Transaksi\n";
-        cout << "4. Riwayat Transaksi\n";
-        cout << "5. Kembali";
-        cout << "Pilih : ";
-        cin >> pilihan;
-
-        if (pilihan == 1)
-        {
-            tampilkanObat(obat);
-        }
-        else if (pilihan == 2)
-        {
-            searchObat(obat);
-        }
-        else if (pilihan == 3)
-        {
-            transaksiData(obat, transaksi);
-        }
-        else if (pilihan == 4)
-        {
-            riwayatTransaksi(transaksi);
-        }
-
-    } while (pilihan != 5);
-}
-
-void menuAdmin(json &obat, json &transaksi)
-{
-    int pilihan;
-
-    do
-    {
-        cout << "\n=========== MENU ADMIN ===========\n";
-        cout << "1. Tambah Data Obat\n";
-        cout << "2. Lihat Data Obat\n";
-        cout << "3. Update Obat\n";
-        cout << "4. Hapus Obat\n";
-        cout << "5. Riwayat Transaksi\n";
-        cout << "6. Logout\n";
-        cout << "Masukkan Pilihan : ";
-        cin >> pilihan;
-
-        if (pilihan == 1)
-        {
-            tambahObat(obat);
-        }
-        else if (pilihan == 2)
-        {
-            viewMenu(obat);
-        }
-        else if (pilihan == 3)
-        {
-            updateObat(obat);
-        }
-        else if (pilihan == 4)
-        {
-            hapusObat(obat);
-        }
-        else if (pilihan == 5)
-        {
-            riwayatTransaksi(transaksi);
-        }
-
-    } while (pilihan != 6);
-}
-
-void viewMenu(json &obat)
-{
-    int pilihan;
-
-    do
-    {
-        cout << "===== MENU VIEW OBAT ======\n";
-        cout << "1. Tampilkan Semua Daftar Obat\n";
-        cout << "2. Cari Obat\n";
-        cout << "3. Urutkan Obat Berdasarkan Nama\n";
-        cout << "4. Kembali ke Menu Utama\n";
-        cout << "Masukkan Pilihan : ";
-        cin >> pilihan;
-
-        if (pilihan == 1)
-        {
-            tampilkanObat(obat);
-        }
-        else if (pilihan == 2)
-        {
-            searchObat(obat);
-        }
-        else if (pilihan == 3)
-        {
-            sortingNamaObat(obat);
-        }
-        else if (pilihan == 4)
-        {
-            cout << "Kembali ke Menu Utama...\n";
-        }
-        else
-        {
-            cout << "Pilihan tidak valid!\n";
-        }
-    } while (pilihan != 4);
-}
-
 void transaksiData(json &obat, json &transaksi)
 {
     string id;
@@ -513,6 +428,118 @@ void riwayatTransaksi(json transaksi)
              << setw(15) << t["status"].get<string>()
              << endl;
     }
+}
+void viewMenu(json &obat)
+{
+    int pilihan;
+
+    do
+    {
+        cout << "===== MENU VIEW OBAT ======\n";
+        cout << "1. Tampilkan Semua Daftar Obat\n";
+        cout << "2. Cari Obat\n";
+        cout << "3. Urutkan Obat Berdasarkan Nama\n";
+        cout << "4. Kembali ke Menu Utama\n";
+        cout << "Masukkan Pilihan : ";
+        cin >> pilihan;
+
+        if (pilihan == 1)
+        {
+            tampilkanObat(obat);
+        }
+        else if (pilihan == 2)
+        {
+            searchObat(obat);
+        }
+        else if (pilihan == 3)
+        {
+            sortingNamaObat(obat);
+        }
+        else if (pilihan == 4)
+        {
+            cout << "Kembali ke Menu Utama...\n";
+        }
+        else
+        {
+            cout << "Pilihan tidak valid!\n";
+        }
+    } while (pilihan != 4);
+}
+
+void menuKasir(json &obat, json &transaksi)
+{
+    int pilihan;
+
+    do
+    {
+
+        cout << "\n=========== MENU KASIR ===========\n";
+        cout << "1. View Data Obat\n";
+        cout << "2. Cari Obat\n";
+        cout << "3. Transaksi\n";
+        cout << "4. Riwayat Transaksi\n";
+        cout << "5. Kembali";
+        cout << "Pilih : ";
+        cin >> pilihan;
+
+        if (pilihan == 1)
+        {
+            tampilkanObat(obat);
+        }
+        else if (pilihan == 2)
+        {
+            searchObat(obat);
+        }
+        else if (pilihan == 3)
+        {
+            transaksiData(obat, transaksi);
+        }
+        else if (pilihan == 4)
+        {
+            riwayatTransaksi(transaksi);
+        }
+
+    } while (pilihan != 5);
+}
+
+void menuAdmin(json &obat, json &transaksi)
+{
+    int pilihan;
+
+    do
+    {
+        cout << "\n=========== MENU ADMIN ===========\n";
+        cout << "1. Tambah Data Obat\n";
+        cout << "2. Lihat Data Obat\n";
+        cout << "3. Update Obat\n";
+        cout << "4. Hapus Obat\n";
+        cout << "5. Riwayat Transaksi\n";
+        cout << "6. Logout\n";
+        cout << "Masukkan Pilihan : ";
+        cin >> pilihan;
+
+        if (pilihan == 1)
+        {
+            tambahObat(obat);
+        }
+        else if (pilihan == 2)
+        {
+            viewMenu(obat);
+        }
+        else if (pilihan == 3)
+        {
+            updateObat(obat);
+        }
+        else if (pilihan == 4)
+        {
+            hapusObat(obat);
+        }
+        else if (pilihan == 5)
+        {
+            riwayatTransaksi(transaksi);
+        }
+
+    } while (pilihan != 6);
 }
 
 int main()
