@@ -101,17 +101,17 @@ void tampilkanObat(json obat)
     setColor(11);
 
     cout << "\n";
-    cout << "╔════════════════════════════════════════════════════════════════════════════╗\n";
-    cout << "║                         DATA OBAT APOTEK                                   ║\n";
-    cout << "╠════╦══════╦════════════════╦════════════╦══════════╦══════════╦═══════════ ╣\n";
+    cout << "╔═════════════════════════════════════════════════════════════════════╗\n";
+    cout << "║                         DATA OBAT APOTEK                            ║\n";
+    cout << "╠════╦════════════════╦════════════╦══════════╦══════════╦═══════════ ╣\n";
 
     setColor(14);
 
-    cout << "║ No ║ ID   ║ Nama Obat      ║ Jenis      ║ Harga    ║ Stok     ║ Expired    ║\n";
+    cout << "║ No ║ Nama Obat      ║ Jenis      ║ Harga    ║ Stok     ║ Expired    ║\n";
 
     setColor(11);
 
-    cout << "╠════╬══════╬════════════════╬════════════╬══════════╬══════════╬═══════════ ╣\n";
+    cout << "╠════╬══════════════════════╬════════════╬══════════╬══════════╬════  ╣\n";
 
     int no = 1;
 
@@ -121,8 +121,6 @@ void tampilkanObat(json obat)
 
         cout << "║ "
              << left << setw(3) << no++
-             << "║ "
-             << setw(5) << o["id"].get<string>()
              << "║ "
              << setw(15) << o["nama"].get<string>()
              << "║ "
@@ -139,7 +137,7 @@ void tampilkanObat(json obat)
 
     setColor(11);
 
-    cout << "╚════╩══════╩════════════════╩════════════╩══════════╩══════════╩═══════════ ╝\n";
+    cout << "╚════╩════════════════╩════════════╩══════════╩══════════╩═══════════ ╝\n";
 
     setColor(7);
 }
@@ -203,7 +201,7 @@ void tambahObat(json &obat)
         cin.clear();
         cin.ignore(1000, '\n');
 
-        cout << "❌ Gagal tambah obat: " << e.what() << endl;
+        cout << " Gagal tambah obat: " << e.what() << endl;
     }
 }
 void updateObat(json &obat)
