@@ -1,3 +1,20 @@
 {
-    "obat": []
+    "obat": [
+        {
+            "expired": "2029-09-10",
+            "harga": 120000,
+            "id": "OB1",
+            "jenis": "tablet",
+            "nama": "paracetamol",
+            "stok": 18
+        },
+        {
+            "expired": "2030-10-10",
+            "harga": 30000,
+            "id": "OB2",
+            "jenis": "tablet",
+            "nama": "panadol",
+            "stok": 28
+        }
+    ]
 }
