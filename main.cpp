@@ -720,59 +720,208 @@ void hapusObat(vector<Obat> &data)
 
 void searchObat(vector<Obat> &data)
 {
+    system("cls");
+
     string keyword;
 
-    cout << "Masukkan Nama Obat :";
-    cin >> keyword;
+    setColor(11);
+
+    cout << "╔══════════════════════════════════════════════╗\n";
+
+    setColor(14);
+
+    cout << "║                 SEARCH OBAT                 ║\n";
+
+    setColor(11);
+
+    cout << "╠══════════════════════════════════════════════╣\n";
+
+    setColor(3);
+
+    cout << "║ Masukkan Kata Kunci : ";
+
+    setColor(7);
+
+    cin.ignore();
+    getline(cin, keyword);
+
+    if (keyword.empty())
+    {
+        setColor(12);
+
+        cout << "\nKata kunci tidak boleh kosong!\n";
+
+        setColor(7);
+
+        Sleep(1000);
+        return;
+    }
 
     bool ditemukan = false;
+    int no = 1;
+
+    system("cls");
+
+    setColor(11);
+
+    cout << "╔════╦════════╦════════════════╦════════════╦══════════╦════════╦════════════╗\n";
+
+    setColor(14);
+
+    cout << "║ No ║ ID     ║ Nama Obat      ║ Jenis      ║ Harga    ║ Stok   ║ Expired    ║\n";
+
+    setColor(11);
+
+    cout << "╠════╬════════╬════════════════╬════════════╬══════════╬════════╬════════════╣\n";
 
     for (auto &o : data)
     {
         string nama = o.nama;
 
-        if (nama.find(keyword) != string::npos)
-        {
+        transform(nama.begin(), nama.end(), nama.begin(), ::tolower);
 
+        string cari = keyword;
+
+        transform(cari.begin(), cari.end(), cari.begin(), ::tolower);
+
+        if (nama.find(cari) != string::npos)
+        {
             ditemukan = true;
 
-            cout << o.id << " | "
-                 << o.nama << " | "
-                 << o.jenis << " | "
-                 << o.expired << " | "
-                 << o.harga << " | "
-                 << o.stok << endl;
+            if (o.stok <= 5)
+            {
+                setColor(12);
+            }
+            else
+            {
+                setColor(7);
+            }
+
+            cout << "║ "
+                 << left << setw(3) << no++
+                 << "║ "
+                 << setw(7) << o.id
+                 << "║ "
+                 << setw(15) << o.nama
+                 << "║ "
+                 << setw(11) << o.jenis
+                 << "║ "
+                 << setw(9) << o.harga
+                 << "║ "
+                 << setw(7) << o.stok
+                 << "║ "
+                 << setw(11) << o.expired
+                 << "║\n";
         }
     }
+
+    setColor(11);
+
+    cout << "╚════╩════════╩════════════════╩════════════╩══════════╩════════╩════════════╝\n";
+
     if (!ditemukan)
     {
-        cout << "Obat dengan nama " << keyword << " tidak ditemukan!\n";
+        setColor(12);
+
+        cout << "\nObat dengan kata kunci \"" << keyword << "\" tidak ditemukan!\n";
     }
+    else
+    {
+        setColor(10);
+
+        cout << "\nPencarian selesai!\n";
+    }
+
+    setColor(7);
+
+    system("pause");
 }
 
 void sortingNamaObat(vector<Obat> &data)
 {
-    vector<Obat> sortedData;
+    system("cls");
 
-    for (auto &o : data)
+    if (data.empty())
     {
-        sortedData.push_back(o);
+        setColor(12);
+
+        cout << "╔════════════════════════════════════╗\n";
+        cout << "║      DATA OBAT MASIH KOSONG        ║\n";
+        cout << "╚════════════════════════════════════╝\n";
+
+        setColor(7);
+
+        Sleep(1500);
+        return;
     }
 
-    sort(sortedData.begin(), sortedData.end(), [](Obat a, Obat b)
-         { return a.nama < b.nama; });
+    vector<Obat> sortedData = data;
 
-    cout << "============= DAFTAR OBAT (SORTING NAMA) =============\n";
+    sort(sortedData.begin(), sortedData.end(),
+         [](Obat a, Obat b)
+         {
+             return a.nama < b.nama;
+         });
+
+    setColor(11);
+
+    cout << "╔════════════════════════════════════════════════════════════════════════════════════╗\n";
+
+    setColor(14);
+
+    cout << "║                          DATA OBAT (SORTING NAMA A-Z)                              ║\n";
+
+    setColor(11);
+
+    cout << "╠════╦════════╦════════════════╦════════════╦════════════╦════════╦══════════════════╣\n";
+
+    setColor(10);
+
+    cout << "║ No ║ ID     ║ Nama Obat      ║ Jenis      ║ Harga      ║ Stok   ║ Expired          ║\n";
+
+    setColor(11);
+
+    cout << "╠════╬════════╬════════════════╬════════════╬════════════╬════════╬══════════════════╣\n";
+
+    int no = 1;
 
     for (auto &o : sortedData)
     {
-        cout << o.id << " | "
-             << o.nama << " | "
-             << o.jenis << " | "
-             << o.expired << " | "
-             << o.harga << " | "
-             << o.stok << endl;
+        setColor(7);
+
+        cout << "║ "
+             << left << setw(3) << no++
+             << "║ "
+             << setw(7) << o.id
+             << "║ "
+             << setw(15) << o.nama
+             << "║ "
+             << setw(11) << o.jenis
+             << "║ "
+             << setw(11) << o.harga
+             << "║ "
+             << setw(7) << o.stok
+             << "║ "
+             << setw(15) << o.expired
+             << "║\n";
     }
+
+    setColor(11);
+
+    cout << "╚════╩════════╩════════════════╩════════════╩════════════╩════════╩═════════════════╝\n";
+
+    setColor(3);
+
+    cout << "\nTotal Data Obat : " << sortedData.size() << endl;
+
+    setColor(8);
+
+    cout << "\nTekan ENTER untuk kembali...";
+
+    setColor(7);
+
+    cin.ignore();
+    cin.get();
 }
 
 void transaksiData(vector<Obat> &data, json &transaksi)
