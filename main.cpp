@@ -926,98 +926,290 @@ void sortingNamaObat(vector<Obat> &data)
 
 void transaksiData(vector<Obat> &data, json &transaksi)
 {
-    string id;
-    int jumlah;
+    system("cls");
 
+    int nomorObat, jumlah;
+    long long uangBayar;
     tampilkanObat(data);
 
-    cout << "\n Masukkan ID obat : ";
-    cin >> id;
+    setColor(11);
+    cout << "\n╔════════════════════════════════════════╗\n";
+    setColor(14);
+    cout << "║        TRANSAKSI PEMBELIAN OBAT          ║\n";
+    setColor(11);
+    cout << "╚══════════════════════════════════════════╝\n";
+    setColor(3);
 
-    for (auto &o : data)
+    cout << "\nMasukkan Nomor Obat : ";
+    setColor(7);
+
+    if (!(cin >> nomorObat))
     {
-        if (o.id == id)
-        {
-            cout << "Masukkan Jumlah Obat yang di Beli : ";
-            cin >> jumlah;
+        cin.clear();
+        cin.ignore(1000, '\n');
 
-            if (jumlah > o.stok)
-            {
-                cout << "Stok Tidak Mencukupi!\n";
-                return;
-            }
+        setColor(12);
+        cout << "\nInput Harus Angka!\n";
+        setColor(7);
 
-            int totalHarga = jumlah * o.harga;
-            cout << "\nTotal Harga : " << totalHarga << endl;
-            cout << "\nLanjutkan Pembayaran ? (y/n) : ";
-            char bayar;
-            cin >> bayar;
-
-            json t;
-
-            int nomor = transaksi["transaksi"].size() + 1;
-
-            t["id"] = "TR" + to_string(nomor);
-            t["obat"] = o.nama;
-            t["jumlah"] = jumlah;
-            t["total"] = totalHarga;
-
-            if (bayar == 'y')
-            {
-                t["status"] = "Selesai";
-                o.stok -= jumlah;
-
-                cout << "\n=========== STRUK ===========\n";
-                cout << "ID Transaksi : " << t["id"] << endl;
-                cout << "Nama Obat : " << t["obat"] << endl;
-                cout << "Jumlah : " << t["jumlah"] << endl;
-                cout << "--------------------------------\n";
-                cout << "Total Bayar  : " << formatRupiah(totalHarga) << endl;
-                cout << "Status       : SELESAI\n";
-                cout << "===============================\n";
-            }
-
-            else
-            {
-                t["status"] = "Dibatalkan";
-                cout << "Transaksi Dibatalkan!\n";
-            }
-
-            transaksi["transaksi"].push_back(t);
-            saveJSON("obat.json", convertToJSON(data));
-
-            return;
-        }
+        Sleep(1500);
+        return;
     }
-    cout << "Data obat dengan ID " << id << " tidak ditemukan!\n";
+
+    if (nomorObat < 1 || nomorObat > data.size())
+    {
+        setColor(12);
+        cout << "\nNomor Obat Tidak Valid!\n";
+        setColor(7);
+
+        Sleep(1500);
+        return;
+    }
+
+    Obat *o = &data[nomorObat - 1];
+    setColor(3);
+    cout << "Jumlah Obat di Beli : ";
+    setColor(7);
+
+    if (!(cin >> jumlah))
+    {
+        cin.clear();
+        cin.ignore(1000, '\n');
+
+        setColor(12);
+        cout << "\nInput Harus Angka!\n";
+        setColor(7);
+
+        Sleep(1500);
+        return;
+    }
+
+    if (jumlah <= 0)
+    {
+        setColor(12);
+        cout << "\nJumlah harus lebih dari 0!\n";
+        setColor(7);
+
+        Sleep(1500);
+        return;
+    }
+
+    if (jumlah > o->stok)
+    {
+        setColor(12);
+        cout << "\nStok tidak mencukupi!\n";
+        setColor(7);
+
+        Sleep(1500);
+        return;
+    }
+
+    long long TotalHarga = o->harga * jumlah;
+
+    system("cls");
+    setColor(11);
+
+    cout << "╔══════════════════════════════════════╗\n";
+    cout << "║         KONFIRMASI TRANSAKSI         ║\n";
+    cout << "╠══════════════════════════════════════╣\n";
+
+    setColor(14);
+
+    cout << "║ Nama Obat    : "
+         << left << setw(20) << o->nama
+         << "║\n";
+
+    cout << "║ Harga Satuan : "
+         << left << setw(20) << formatRupiah(o->harga)
+         << "║\n";
+
+    cout << "║ Jumlah Beli  : "
+         << left << setw(20) << jumlah
+         << "║\n";
+
+    cout << "╠══════════════════════════════════════╣\n";
+
+    cout << "║ Total Bayar  : "
+         << left << setw(20) << formatRupiah(TotalHarga)
+         << "║\n";
+
+    setColor(11);
+
+    cout << "╚══════════════════════════════════════╝\n";
+
+    char konfirmasi;
+
+    setColor(10);
+    cout << "Konfirmasi Pembelian? (y/n) : ";
+    cin >> konfirmasi;
+
+    if (konfirmasi != 'y' && konfirmasi != 'Y')
+    {
+        setColor(14);
+        cout << "\nTransaksi dibatalkan!\n";
+        setColor(7);
+        Sleep(1500);
+        return;
+    }
+
+    setColor(3);
+    cout << "\nMasukkan Uang Bqayar : ";
+    setColor(7);
+
+    if (!(cin >> uangBayar))
+    {
+        cin.clear();
+        cin.ignore(1000, '\n');
+
+        setColor(12);
+        cout << "\nInput Pembayarn Harus Angka!\n";
+        setColor(7);
+
+        Sleep(1500);
+        return;
+    }
+    if (uangBayar < TotalHarga)
+    {
+        setColor(12);
+        cout << "\nUang Pembayaran Kurang!\n";
+        cout << "Kurang :" << formatRupiah(TotalHarga - uangBayar) << endl;
+        setColor(7);
+
+        Sleep(2000);
+        return;
+    }
+
+    long long kembalian = uangBayar - TotalHarga;
+
+    o->stok -= jumlah;
+    json t;
+
+    int nomor = transaksi["transaksi"].size() + 1;
+
+    t["id"] = "TR" + to_string(nomor);
+    t["obat"] = o->nama;
+    t["jumlah"] = jumlah;
+    t["total"] = TotalHarga;
+    t["bayar"] = uangBayar;
+    t["kembalian"] = kembalian;
+    t["status"] = "selesai";
+
+    transaksi["transaksi"].push_back(t);
+
+    saveJSON("transaksi.json", transaksi);
+    saveJSON("obat.json", convertToJSON(data));
+
+    system("cls");
+    setColor(11);
+
+    cout << "╔════════════════════════════════════════════════════╗\n";
+    setColor(14);
+    cout << "║                    STRUK BELANJA                  ║\n";
+    setColor(11);
+    cout << "╠════════════════════════════════════════════════════╣\n";
+
+    setColor(7);
+
+    cout << " ID Transaksi : " << t["id"] << endl;
+    cout << " Nama Obat    : " << o->nama << endl;
+    cout << " Jumlah       : " << jumlah << endl;
+    cout << " Harga        : " << formatRupiah(o->harga) << endl;
+
+    cout << "----------------------------------------------------\n";
+
+    cout << " Total Bayar  : "
+         << formatRupiah(TotalHarga) << endl;
+
+    cout << " Uang Bayar   : "
+         << formatRupiah(uangBayar) << endl;
+
+    cout << " Kembalian    : "
+         << formatRupiah(kembalian) << endl;
+
+    cout << "----------------------------------------------------\n";
+
+    setColor(10);
+
+    cout << " Status       : TRANSAKSI BERHASIL\n";
+
+    setColor(11);
+
+    cout << "╚════════════════════════════════════════════════════╝\n";
+
+    setColor(7);
+
+    system("pause");
 }
 
 void riwayatTransaksi(json transaksi)
 {
-    cout << "\n================ RIWAYAT TRANSAKSI ================\n";
+    system("cls");
 
-    cout << left
-         << setw(10) << "ID"
-         << setw(20) << "Obat"
-         << setw(10) << "Jumlah"
-         << setw(15) << "Total"
-         << setw(15) << "Status"
-         << endl;
+    setColor(11);
 
-    cout << "===================================================\n";
+    cout << "╔════════════════════════════════════════════════════════════════════════════════════╗\n";
+
+    setColor(14);
+
+    cout << "║                              RIWAYAT TRANSAKSI                                     ║\n";
+
+    setColor(11);
+
+    cout << "╠══════╦══════════╦════════════════╦════════╦══════════════╦═════════════════════════╣\n";
+
+    setColor(3);
+
+    cout << "║ No   ║ ID       ║ Nama Obat      ║ Jumlah ║ Total        ║ Status                  ║\n";
+
+    setColor(11);
+
+    cout << "╠══════╬══════════╬════════════════╬════════╬══════════════╬═════════════════════════╣\n";
+
+    int no = 1;
 
     for (auto &t : transaksi["transaksi"])
     {
+        setColor(7);
 
-        cout << left
-             << setw(10) << t["id"].get<string>()
-             << setw(20) << t["obat"].get<string>()
-             << setw(10) << t["jumlah"].get<int>()
-             << setw(15) << t["total"].get<int>()
-             << setw(15) << t["status"].get<string>()
-             << endl;
+        cout << "║ "
+             << left << setw(5) << no++
+             << "║ "
+             << setw(9) << t["id"].get<string>()
+             << "║ "
+             << setw(15) << t["obat"].get<string>()
+             << "║ "
+             << setw(7) << t["jumlah"].get<int>()
+             << "║ "
+             << setw(13) << formatRupiah(t["total"].get<int>())
+             << "║ ";
+
+        if (t["status"] == "selesai")
+        {
+            setColor(10);
+            cout << setw(22) << "SELESAI";
+        }
+        else
+        {
+            setColor(12);
+            cout << setw(22) << "DIBATALKAN";
+        }
+
+        setColor(7);
+
+        cout << "║\n";
     }
+
+    setColor(11);
+
+    cout << "╚══════╩══════════╩════════════════╩════════╩══════════════╩═════════════════════════╝\n";
+
+    setColor(7);
+
+    cout << "\nTekan enter untuk kembali...";
+    cin.ignore();
+    cin.get();
 }
+
 void viewMenu(vector<Obat> &data)
 {
     int pilihan;
